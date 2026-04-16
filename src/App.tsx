@@ -17,6 +17,21 @@ export default function App() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
 
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setOperations(JSON.parse(raw));
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(operations));
+  }, [operations]);
+
   const totals = useMemo(() => {
     let income = 0;
     let expense = 0;
