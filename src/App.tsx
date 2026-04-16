@@ -17,6 +17,20 @@ export default function App() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
 
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setOperations(JSON.parse(raw));
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(operations));
+  }, [operations]);
 
   const totals = useMemo(() => {
     let income = 0;
@@ -34,6 +48,28 @@ export default function App() {
     };
   }, [operations]);
 
+  const addOperation = () => {
+    const parsedAmount = Number(amount);
+
+    if (!name.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
+      return;
+    }
+
+    const newOp: Operation = {
+      id: crypto.randomUUID(),
+      type,
+      name,
+      amount: parsedAmount,
+    };
+
+    setOperations((prev) => [newOp, ...prev]);
+    setName("");
+    setAmount("");
+  };
+
+  const removeOperation = (id: string) => {
+    setOperations((prev) => prev.filter((op) => op.id !== id));
+  };
 
   return (
     <div className="p-6 max-w-xl mx-auto">
