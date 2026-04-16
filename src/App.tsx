@@ -17,7 +17,6 @@ export default function App() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
 
-
   const totals = useMemo(() => {
     let income = 0;
     let expense = 0;
@@ -34,6 +33,24 @@ export default function App() {
     };
   }, [operations]);
 
+  const addOperation = () => {
+    const parsedAmount = Number(amount);
+
+    if (!name.trim() || isNaN(parsedAmount) || parsedAmount <= 0) {
+      return;
+    }
+
+    const newOp: Operation = {
+      id: crypto.randomUUID(),
+      type,
+      name,
+      amount: parsedAmount,
+    };
+
+    setOperations((prev) => [newOp, ...prev]);
+    setName("");
+    setAmount("");
+  };
 
   return (
     <div className="p-6 max-w-xl mx-auto">
