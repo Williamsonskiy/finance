@@ -52,6 +52,10 @@ export default function App() {
     setAmount("");
   };
 
+  const removeOperation = (id: string) => {
+    setOperations((prev) => prev.filter((op) => op.id !== id));
+  };
+
   return (
     <div className="p-6 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">Учёт финансов</h1>
